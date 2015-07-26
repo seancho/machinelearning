@@ -91,6 +91,8 @@ modelFit2 <- train(as.factor(classe)~., data=subTrainingA, method="rf", prox=TRU
 modelFit2
 ```
 
+Estimated Accuracy of 96%. 
+
 ## Cross Validation
 ```{r}
 pred2 <- predict(modelFit2, newdata=subTestingA)

@@ -78,7 +78,7 @@ img {
  testing &lt;- read.csv('https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv', na.strings=&quot;NA&quot;, stringsAsFactors=FALSE) 
 
 dateDownloaded</code></pre>
-<pre><code>## [1] &quot;Sun Jul 26 16:18:17 2015&quot;</code></pre>
+<pre><code>## [1] &quot;Sun Jul 26 18:32:40 2015&quot;</code></pre>
 </div>
 <div id="reducing-columns" class="section level2">
 <h2>Reducing Columns</h2>
@@ -196,6 +196,26 @@ library(doParallel)</code></pre>
 <pre><code>## Loading required package: randomForest
 ## randomForest 4.6-10
 ## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre class="r"><code>modelFit2</code></pre>
+<pre><code>## Random Forest 
+## 
+## 3927 samples
+##   52 predictor
+##    5 classes: 'A', 'B', 'C', 'D', 'E' 
+## 
+## No pre-processing
+## Resampling: Bootstrapped (25 reps) 
+## Summary of sample sizes: 3927, 3927, 3927, 3927, 3927, 3927, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  Accuracy   Kappa      Accuracy SD  Kappa SD   
+##    2    0.9541875  0.9419503  0.006030179  0.007636853
+##   27    0.9606547  0.9501508  0.005867886  0.007445336
+##   52    0.9488177  0.9351833  0.006721276  0.008426753
+## 
+## Accuracy was used to select the optimal model using  the largest value.
+## The final value used for the model was mtry = 27.</code></pre>
+<p>Estimated Accuracy of 96%.</p>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
