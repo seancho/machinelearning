@@ -1,0 +1,122 @@
+---
+title: "Machine Learning Project"
+output: html_document
+---
+
+Machine Learning Project : Create a data model can predict classification of excercise. 
+
+```{r}
+ #Install caret package if it is not available.
+ #install.packages("caret")
+ library(caret)
+```
+
+## Load Data
+
+```{r, loaddata}
+dateDownloaded <- date()
+
+ training <- read.csv('https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv', na.strings="NA", stringsAsFactors=FALSE) 
+ testing <- read.csv('https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv', na.strings="NA", stringsAsFactors=FALSE) 
+
+dateDownloaded
+```
+
+## Reducing Columns
+
+```{r, dependson="loaddata"}
+training$classe <- as.factor(training$classe)
+
+nsv<-nearZeroVar(training)
+trainingA <- training[,-nsv]
+testingA <- testing[,-nsv]
+
+# training is the name of the training set data frame
+trainingA.nrow <- nrow(trainingA)
+testingA.nrow <- nrow(testingA)
+
+# Run apply on the training set.  Dimension 2 means call the function on each column.
+col_is_bad <- apply(trainingA, 2, function(col) {
+  # You'll get the entire column contents as a vector here, in the col parameter.
+  # Put your "is this column no good" test here.
+  sum(is.na(col)) / trainingA.nrow > 0.1  # Is this column more than half NA?
+})
+#col_is_bad
+
+trainingA[col_is_bad] <- list(NULL)
+testingA[col_is_bad] <- list(NULL)
+
+# Can also remove columns by name.
+more_bad_cols <- c("X", "user_name",  "raw_timestamp_part_1", "raw_timestamp_part_2", "cvtd_timestamp", "new_window", "num_window")
+trainingA[more_bad_cols] <- list(NULL)
+testingA[more_bad_cols] <- list(NULL)
+
+str(trainingA)
+#summary(trainingA)
+dim(trainingA)
+```
+
+Reducing the columns using Near Zero Variance predictors functions and columns with NA values more than 10% in the column has been eliminated. 
+
+trainingA became **19622 Observations** with **53 variables**. 
+
+## Creating Subset from Training data.
+```{r}
+set.seed(12345)
+inTrain <- createDataPartition(y=training$classe, p=0.2, list=FALSE)
+
+subTrainingA <- trainingA[inTrain,]
+subTestingA <- trainingA[-inTrain,]
+```
+
+Because of the time constraint of the project, only 20% from the Training data set has been used to create a Training Subset.  
+
+Idealy, Training set should have been divided by 60% training and 40% testing for training the model.
+
+## Parallel Process
+
+```{r}
+#Install the package if it is already installed. 
+#install.packages("doParallel")
+library(doParallel)
+registerDoParallel(cores=2)
+```
+
+Parallel process was used to utilize computer resources effectively and reduce calculation time.  
+
+## Training the model
+```{r}
+modelFit2 <- train(as.factor(classe)~., data=subTrainingA, method="rf", prox=TRUE)
+```
+
+## Cross Validation
+```{r}
+pred2 <- predict(modelFit2, newdata=subTestingA)
+
+confusionMatrix(subTestingA$classe, pred2)
+```
+Cross Validation using testing subset created from Training data and confusion matrix was created. 
+
+**Randome Forest** model was choosen, because subset of training data was small and it has higher accuracy.  Also, it was the only method, worked to create a training model. 
+
+Eventhough, very limited data was used for training, it was able to predict classes with **97.15%** accuracy. 
+
+```{r}
+pred <- predict(modelFit2, newdata=testingA)
+answers<- as.character(pred)
+
+answers
+```
+
+```{r}
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+pml_write_files(answers)
+```
+Files were created for Prediction submission. 
+
