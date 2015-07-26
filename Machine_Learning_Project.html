@@ -78,7 +78,7 @@ img {
  testing &lt;- read.csv('https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv', na.strings=&quot;NA&quot;, stringsAsFactors=FALSE) 
 
 dateDownloaded</code></pre>
-<pre><code>## [1] &quot;Sun Jul 26 15:57:03 2015&quot;</code></pre>
+<pre><code>## [1] &quot;Sun Jul 26 16:18:17 2015&quot;</code></pre>
 </div>
 <div id="reducing-columns" class="section level2">
 <h2>Reducing Columns</h2>
@@ -235,7 +235,7 @@ confusionMatrix(subTestingA$classe, pred2)</code></pre>
 ## Balanced Accuracy      0.9894   0.9755   0.9667   0.9850   0.9919</code></pre>
 <p>Cross Validation using testing subset created from Training data and confusion matrix was created.</p>
 <p><strong>Randome Forest</strong> model was choosen, because subset of training data was small and it has higher accuracy. Also, it was the only method, worked to create a training model.</p>
-<p>Eventhough, very limited data was used for training, it was able to predict classes with <strong>96.85%</strong> accuracy.</p>
+<p>Eventhough, very limited data was used for training, it was able to predict classes with <strong>97.15%</strong> accuracy.</p>
 <pre class="r"><code>pred &lt;- predict(modelFit2, newdata=testingA)
 answers&lt;- as.character(pred)
 

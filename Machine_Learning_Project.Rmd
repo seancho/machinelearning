@@ -87,6 +87,8 @@ Parallel process was used to utilize computer resources effectively and reduce c
 ## Training the model
 ```{r}
 modelFit2 <- train(as.factor(classe)~., data=subTrainingA, method="rf", prox=TRUE)
+
+modelFit2
 ```
 
 ## Cross Validation
